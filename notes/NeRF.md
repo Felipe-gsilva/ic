@@ -14,3 +14,5 @@ Como esse processo é naturalmente diferenciável, conseguimos usar [gradiente d
 ![alt text](../dist/image.png)
 # Renderização volumétrica
 A densidade $\sigma(x)$ pode ser interpretada como a probabilidade diferencial de um raio terminar na n-ésima particula no ponto x.
+
+
