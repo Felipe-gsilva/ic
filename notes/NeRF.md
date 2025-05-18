@@ -12,3 +12,5 @@ Este projeto se usa de uma rede neural MLP(Multilayer perceptron), a qual não p
 Como esse processo é naturalmente diferenciável, conseguimos usar [gradiente descendente](descent-gradient.md) para otimizar os resultados.
 
 ![alt text](../dist/image.png)
+# Renderização volumétrica
+A densidade $\sigma(x)$ pode ser interpretada como a probabilidade diferencial de um raio terminar na n-ésima particula no ponto x.
