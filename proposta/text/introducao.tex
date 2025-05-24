@@ -1,15 +1,10 @@
-%\singlespacing
 \section{Introdução}
 \label{sec:introducao}
 
-Diferentemente de métodos tradicionais de renderização, os campos de radiação neural, os \textit{NeRF's} \cite{mildenhall2020nerfrepresentingscenesneural} utilizam-se de técnicas de renderização volumétricas comuns, se apoiando nas redes neurais artificiais MLP's (multilayer perceptron) \cite{GARDNER19982627} para processar a entrada de coordanadas 5D em pontos de densidade e cor \cite{mildenhall2020nerfrepresentingscenesneural}, em contraponto a outros modelos que se baseiam em voxels ou malhas comuns nas técnicas de renderização padrão. Para isso, o \textit{NeRF} precisa de um conjunto consideravelmente grande de imagens e diferentes rotações de ângulos.
+Diferentemente de métodos tradicionais de renderização, os campos de radiação neural, os \textit{NeRF's} \cite{mildenhall2020nerfrepresentingscenesneural}, utilizam-se de técnicas de renderização volumétricas comuns, apoiando-se nas redes neurais artificiais MLP's (multilayer perceptron) \cite{GARDNER19982627} para processar a entrada de coordanadas 5D em pontos de densidade e cor \cite{mildenhall2020nerfrepresentingscenesneural}, em contraponto a outros modelos que se baseiam em voxels ou malhas comuns nas técnicas de renderização padrão. Para isso, o \textit{NeRF} precisa de um conjunto consideravelmente grande de imagens e diferentes rotações dos ângulos da câmera.
 
-Considerando-se a problemática supracitada, vários autores buscam (ainda) aprimorar seus datasets com inúmeras técnicas, por exemplo, utilizando-se do SFM - Structure from Motion%\cite{}
-, uma técnica de imagem de alcance fotogramétrico, para se capturar imagens do ambiente em questão com maior precisão e qualidade.
+Considerando-se a problemática supracitada, vários autores buscam, ainda, aprimorar seus datasets com inúmeras técnicas, por exemplo, utilizando-se do SFM (Structure from Motion), uma técnica de imagem de alcance fotogramétrico, para se capturar imagens do ambiente em questão com maior precisão e qualidade, alcançando técnicas computacionalmente caras ou que, ainda assim, precisam de diversas imagens do ambiente/objeto a ser renderizado\cite{kerbl3Dgaussians}.
 
-alcançando técnicas computacionalmente caras ou que, ainda assim, precisam de diversas imagens do ambiente/objeto a ser renderizado\cite{kerbl3Dgaussians}.
-
-Entretanto, \textit{datasets} histológicos tendem a depender de grupo de exames de imagens os quais nem sempre possuem a redundância de ângulos necessários para se produzir um bom objeto 3D com NeRF (\textit{Neural Radiation Field})\cite{mildenhall2020nerfrepresentingscenesneural}. Isto posto, a incerteza acerca destas imagens torna o processamento de modelos de NeRF sempre mais complexos.
-A escassez de dados e a complexidade estrutural dos tecidos biológicos são desafios significativos na aplicação de técnicas de aprendizado profundo em imagens histológicas.  
+Entretanto, \textit{datasets} histológicos tendem a depender de grupo de exames de imagens os quais nem sempre possuem a redundância de ângulos necessários para se produzir um bom objeto 3D com NeRF (\textit{Neural Radiation Field})\cite{mildenhall2020nerfrepresentingscenesneural}. Isto posto, a incerteza acerca destas imagens torna o processamento de modelos de NeRF sempre mais complexos. A escassez de dados e a complexidade estrutural dos tecidos biológicos são desafios significativos na aplicação de técnicas de aprendizado profundo em imagens histológicas.  
 
 Portanto, o objetivo deste trabalho é
