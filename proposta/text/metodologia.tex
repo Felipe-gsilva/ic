@@ -22,7 +22,11 @@ ok
 
 ok 
 
-\subsection{Etapa 5 - verificar metricas de validacao de modelos 3D e imagens}
+\subsection{Etapa 5 - verificar métricas de validação de modelos 3D e imagens}
+
+Para obter-se bons resultados, factíveis e replicáveis, este projeto buscará utilizar-se de métricas de validação tanto de imagens 2D quanto de modelos completos. Para tal, será utilizado, no campo das imagens, tanto o PSNR (eak Signal-To-Noise Ratio) quanto o SSIM (Structural Similarity Index). O PSNR faz uma comparação direta entre 2 imagens e consegue descrever o ruído discrepante entre estas. Já o SSIM trabalha com a estrutura da imagem em si, ou seja, nos agrupamentos dos pixels da referência quando comparados à imagem gerada. 
+
+Para o domínio dos modelos 3D, espera-se obter bons resultados utilizando-se a técnica de Volumetric IoU (Intersecção sobre a União Volumétrica), a qual calcula a sobreposição entre volumes exisitentes. Estes métodos formam a base para uma boa identificação  de qualidade sobre os modelos testados.
 
 %\subsection{Etapa 2 - Exploração de \textit{BERT}}
 %
