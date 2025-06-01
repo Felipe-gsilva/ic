@@ -8,26 +8,31 @@ A pesquisa será conduzida em cinco etapas principais, dispostas a seguir.
 Esta etapa permite o levantamento bibliográfico necessário para manter o projeto atualizado, proporcionar uma fundamentação teórica sólida e subsidiar a exploração proposta.
 
 
-\subsection{Etapa 2 - processar \textit{dataset} de imanges histológicas para aceptabilidade para o padrão do \textit{NeRF's}}
+\subsection{Etapa 2 - Pré-processamento \textit{dataset} de imanges histológicas}
 
   Dado um conjunto de imagens fornecido pelo % TODO adicionar referencia ao dataset
-  , observa-se certa dissonância entre a entrada esperada pelo \textit{pipeline} do campo de radiação neural e as imagens em si. É necessário % TODO
+  , observa-se 2 embróglios principais: a necessidade de pré-processamento das imagens e a organização do conjunto de dados em grupos distintos. 
+  
+  Os \textit{NeRF}'s requerem os dados sobre a pose da câmera para cada imagem, ou seja, a posição e orientação da câmera no momento da captura da imagem. Para tal, é necessário que as imagens sejam organizadas em grupos, os quais contenham, individualmente, imagens de um único tecido e pose. Consonantemente, o \textbf{pré-processamento} das imagens se torna essencial para garantir-se o formato adequado para o treinamento do modelo. Isso inclui técnicas como a normalização das imagens, a remoção de ruídos e artefatos e a padronização do tamanho e resolução das imagens, nos casos onde se faça necessário.
 
-\subsection{Etapa 3 - geração de imanges com GAN's}
+  Além disso, para efeito de treinamento do modelo, é necessário que sejam estabelecidos subconjuntos de imagens, cada qual usado em diferentes contextos. Serão criados 3 conjuntos principais: \textbf{Treinamento}, \textbf{Validação} e  \textbf{Teste}, sendo, em específico, o conjunto de treinamento, novamente, subdividido. Pretende-se que, ao fazê-lo, os resultados percam possíveis viéses e, ademais, seja possível determinar os resultados de forma mais precisa.
 
-ok
+\subsection{Etapa 3 - Treinamento e Geração de imanges}
 
-\subsection{Etapa 4 - Treinamento do modelo nerf}
+Nesta etapa, um modelo GAN será treinado para gerar novas imagens histológicas a partir do conjunto de dados pré-processado. O modelo GAN deverá aprender as características dos tecidos histológicos presentes no \textit{dataset}, permitindo, assim, a geração de imagens que preservem as propriedades visuais e estruturais dos tecidos. 
 
-ok 
+\subsection{Etapa 4 - Treinamento do modelo NeRF e Criação dos volumes 3D}
+
+O treinamento do modelo NeRF será realizado utilizando as imagens geradas pelo modelo GAN e, paralelamente, com subconjuntos do grupo de treinamento, supracitado. Desta forma, poder-se-á compreender a relação entre as imagens 2D e a reconstrução 3D dos tecidos histológicos. % não se repita, seja conciso e claro 
+A partir do modelo NeRF treinado, serão obtidos volumes 3D dos tecidos histológicos, permitindo a visualização das estruturas internas dos tecidos com alta fidelidade. Esses volumes serão futuramente avaliados quanto à sua qualidade e fidelidade em relação às imagens originais do \textit{dataset} na etapa de validação. 
 
 \subsection{Etapa 5 - Validação dos resultados}
 
-Para obter-se resultados precisos, factíveis e replicáveis, este projeto buscará utilizar-se de métricas de validação  tanto para imagens 2D quanto para modelos 3D reconstruídos.
+Para obter-se resultados precisos, factíveis e replicáveis, este projeto buscará utilizar-se de métricas de validação dos modelos 3D reconstruídos, seja pela comparação com modelos de referência ou pela análise de poses específicas, ou seja, imagens 2D tiradas sobre o modelo.
 
 \begin{itemize}
 
-  \item \textbf{Validação de modelos 2D}: Serão empregados, no campo das imagens bidimensionais, tanto o PSNR (\textit{Peak Signal-To-Noise Ratio}) quanto o SSIM (\textit{Structural Similarity Index}). O PSNR faz uma comparação direta entre 2 imagens e consegue descrever o ruído discrepante entre estas, utilizando-se de uma razão sinal-ruído em escala logarítmica. Já o SSIM trabalha com a estrutura da imagem em si, ou seja, nos agrupamentos dos pixels da referência quando comparados à imagem gerada pela arquitetura GAN, capturando melhor a percepção humana de qualidade visual do que o PSNR.
+  \item \textbf{Validação de imangens 2D}: Serão empregados, no campo das imagens bidimensionais, tanto o PSNR (\textit{Peak Signal-To-Noise Ratio}) quanto o SSIM (\textit{Structural Similarity Index}). O PSNR faz uma comparação direta entre 2 imagens e consegue descrever o ruído discrepante entre estas, utilizando-se de uma razão sinal-ruído em escala logarítmica. Já o SSIM trabalha com a estrutura da imagem em si, ou seja, nos agrupamentos dos pixels da referência quando comparados à imagem gerada pela arquitetura GAN, capturando melhor a percepção humana de qualidade visual do que o PSNR.
 
   \item \textbf{Validação de modelos 3D}: Para o domínio das reconstruções 3D, utilizar-se-á o Volumetric Intersection over Union (IoU Volumétrico). Esta métrica calcula a razão entre o volume da interseção e o volume da união do modelo reconstruído e do modelo de referência, fornecendo uma medida direta da sobreposição espacial dos volumes.
 
