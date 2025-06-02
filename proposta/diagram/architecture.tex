@@ -1,0 +1,52 @@
+\begin{tikzpicture}[
+    box/.style={rectangle, draw, minimum width=2.8cm, minimum height=1.2cm, align=center},
+    dashedbox/.style={rectangle, draw, dashed, minimum width=2.8cm, minimum height=1.2cm, align=center},
+    arr/.style={-Latex, thick},
+    node distance=1.2cm and 2cm
+]
+
+% Folds
+\node[dashedbox] (fold1) {Fold 1};
+\node[dashedbox, below=of fold1] (fold2) {Fold 2};
+\node[below=of fold2] (dots) {\vdots};
+\node[dashedbox, below=of dots] (fold5) {Fold 5};
+
+% Split
+\node[box, right=5cm of fold2, minimum height=3.2cm, text width=3.5cm] (split) {
+  3 folds → Treinamento\\
+  1 fold → Validação\\
+  1 fold → Teste
+};
+
+\draw[arr] (fold1.east) -- (split.west);
+\draw[arr] (fold2.east) -- (split.west);
+\draw[arr] (fold5.east) -- (split.west);
+
+% GAN
+\node[box, right=of split] (gan) {GAN (dados reais)};
+\draw[arr] (split) -- (gan);
+
+% Dados sintéticos
+\node[box, below=of gan] (synthetic) {Imagens sintéticas};
+\draw[arr] (gan) -- (synthetic);
+
+% Concatenação
+\node[box, right=of gan, yshift=-1.2cm] (concat) {Concatenação dos dados reais + sintéticos};
+\draw[arr] (gan) -- (concat);
+\draw[arr] (synthetic) -- (concat);
+
+% Modelo
+\node[box, right=of concat] (model) {Treinamento do modelo};
+\draw[arr] (concat) -- (model);
+
+% Validação
+\node[dashedbox, above=of model] (val) {Validação};
+\draw[arr] (split.east) -- ++(2,0) |- (val.west);
+\draw[arr] (val.south) -- (model.north);
+
+% Teste
+\node[dashedbox, below=of model] (test) {Teste};
+\draw[arr] (split.east) -- ++(2,-1.5) |- (test.west);
+\draw[arr] (model.east) -- ++(1.2,0) node[right] {Desempenho};
+
+\end{tikzpicture}
