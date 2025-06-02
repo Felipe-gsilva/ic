@@ -1,52 +1,100 @@
 \begin{tikzpicture}[
-    box/.style={rectangle, draw, minimum width=2.8cm, minimum height=1.2cm, align=center},
-    dashedbox/.style={rectangle, draw, dashed, minimum width=2.8cm, minimum height=1.2cm, align=center},
+    % Estilos gerais
+    etapa/.style={
+        rectangle,
+        draw,
+        thick,
+        rounded corners=2pt,
+        minimum width=3.5cm,
+        minimum height=1cm,
+        text centered,
+        font=\small
+    },
+    subetapa/.style={
+        rectangle,
+        draw,
+        dashed,
+        rounded corners=2pt,
+        minimum width=3cm,
+        minimum height=0.7cm,
+        text centered,
+        font=\scriptsize
+    },
     arr/.style={-Latex, thick},
-    node distance=1.2cm and 2cm
+    node distance=1.5cm and 1cm
 ]
 
-% Folds
-\node[dashedbox] (fold1) {Fold 1};
-\node[dashedbox, below=of fold1] (fold2) {Fold 2};
-\node[below=of fold2] (dots) {\vdots};
-\node[dashedbox, below=of dots] (fold5) {Fold 5};
-
-% Split
-\node[box, right=5cm of fold2, minimum height=3.2cm, text width=3.5cm] (split) {
-  3 folds → Treinamento\\
-  1 fold → Validação\\
-  1 fold → Teste
+% ================================
+% Etapa 1 – Revisão Bibliográfica
+% ================================
+\node[etapa] (et1) {
+  \textbf{Etapa 1} \\ Revisão Bibliográfica
 };
 
-\draw[arr] (fold1.east) -- (split.west);
-\draw[arr] (fold2.east) -- (split.west);
-\draw[arr] (fold5.east) -- (split.west);
+% ================================
+% Etapa 2 – Pré‐processamento
+% ================================
+\node[etapa, right=of et1] (et2) {
+  \textbf{Etapa 2}\\ Pré‐processamento de imagens
+};
 
-% GAN
-\node[box, right=of split] (gan) {GAN (dados reais)};
-\draw[arr] (split) -- (gan);
+% Detalhes da Etapa 2 (dois sub‐blocos)
+\node[subetapa, below=0.5cm of et2] (et2a) {
+  Ajuste de tamanho, brilho, contraste 
+};
+\node[subetapa, below=of et2a] (et2b) {
+  Organização do dataset em folds
+};
 
-% Dados sintéticos
-\node[box, below=of gan] (synthetic) {Imagens sintéticas};
-\draw[arr] (gan) -- (synthetic);
+% ================================
+% Etapa 3 – Treinamento e Geração
+% ================================
+\node[etapa, right=of et2] (et3) {
+  \textbf{Etapa 3}\\
+  Treinamento de GAN\\
+  Geração de imagens sintéticas
+};
 
-% Concatenação
-\node[box, right=of gan, yshift=-1.2cm] (concat) {Concatenação dos dados reais + sintéticos};
-\draw[arr] (gan) -- (concat);
-\draw[arr] (synthetic) -- (concat);
+% ================================
+% Etapa 4 – Treinamento NeRF
+% ================================
+\node[etapa, right=of et3] (et4) {
+  \textbf{Etapa 4}\\
+  Treinamento do modelo NeRF\\
+  Criação de volumes 3D
+};
 
-% Modelo
-\node[box, right=of concat] (model) {Treinamento do modelo};
-\draw[arr] (concat) -- (model);
+% ================================
+% Etapa 5 – Validação dos Resultados
+% ================================
+\node[etapa, right=of et4] (et5) {
+  \textbf{Etapa 5}\\
+  Validação dos resultados
+};
 
-% Validação
-\node[dashedbox, above=of model] (val) {Validação};
-\draw[arr] (split.east) -- ++(2,0) |- (val.west);
-\draw[arr] (val.south) -- (model.north);
+% Detalhes da Etapa 5 (duas sub‐validações)
+\node[subetapa, below=0.5cm of et5] (et5a) {
+  Validação 2D: PSNR, SSIM, LPIPS
+};
+\node[subetapa, below=of et5a] (et5b) {
+  Validação 3D: IoU volumétrico
+};
 
-% Teste
-\node[dashedbox, below=of model] (test) {Teste};
-\draw[arr] (split.east) -- ++(2,-1.5) |- (test.west);
-\draw[arr] (model.east) -- ++(1.2,0) node[right] {Desempenho};
+% ================================
+% Conectando as Etapas com Setas
+% ================================
+\draw[arr] (et1.east) -- (et2.west);
+\draw[arr] (et2.east) -- (et3.west);
+\draw[arr] (et3.east) -- (et4.west);
+\draw[arr] (et4.east) -- (et5.west);
+
+% ================================
+% Linhas ligando sub‐etapas
+% ================================
+\draw[arr, dashed] (et2.south) -- (et2a.north);
+\draw[arr, dashed] (et2a.south) -- (et2b.north);
+
+\draw[arr, dashed] (et5.south) -- (et5a.north);
+\draw[arr, dashed] (et5a.south) -- (et5b.north);
 
 \end{tikzpicture}
