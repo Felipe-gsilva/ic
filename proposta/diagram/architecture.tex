@@ -1,100 +1,52 @@
 \begin{tikzpicture}[
-    % Estilos gerais
-    etapa/.style={
-        rectangle,
-        draw,
-        thick,
-        rounded corners=2pt,
-        minimum width=3.5cm,
-        minimum height=1cm,
-        text centered,
-        font=\small
-    },
-    subetapa/.style={
-        rectangle,
-        draw,
-        dashed,
-        rounded corners=2pt,
-        minimum width=3cm,
-        minimum height=0.7cm,
-        text centered,
-        font=\scriptsize
-    },
-    arr/.style={-Latex, thick},
-    node distance=1.5cm and 1cm
+  box/.style={rectangle, draw, minimum width=2.5cm, minimum height=1cm, align=center, rounded corners},
+  dashedbox/.style={rectangle, draw, dashed, minimum width=2cm, minimum height=1cm, align=center},
+  arrow/.style={-Latex, thick},
+  node distance=1.2cm and 1.5cm
 ]
 
-% ================================
-% Etapa 1 – Revisão Bibliográfica
-% ================================
-\node[etapa] (et1) {
-  \textbf{Etapa 1} \\ Revisão Bibliográfica
-};
+% Folds
+\node[box] (fold1) {fold 1};
+\node[box, below=of fold1] (fold2) {fold 2};
 
-% ================================
-% Etapa 2 – Pré‐processamento
-% ================================
-\node[etapa, right=of et1] (et2) {
-  \textbf{Etapa 2}\\ Pré‐processamento de imagens
-};
+% Pre-processamento interno
+\node[dashedbox, right=2.2cm of fold1, yshift=0.6cm] (preproc1) {a};
+\node[dashedbox, below=of preproc1] (preproc2) {b};
 
-% Detalhes da Etapa 2 (dois sub‐blocos)
-\node[subetapa, below=0.5cm of et2] (et2a) {
-  Ajuste de tamanho, brilho, contraste 
-};
-\node[subetapa, below=of et2a] (et2b) {
-  Organização do dataset em folds
-};
+% Grupo pré-processamento
+\node[box, fit=(preproc1)(preproc2), label=above:pré-processamento, inner sep=6pt] (preproc) {};
 
-% ================================
-% Etapa 3 – Treinamento e Geração
-% ================================
-\node[etapa, right=of et2] (et3) {
-  \textbf{Etapa 3}\\
-  Treinamento de GAN\\
-  Geração de imagens sintéticas
-};
+% Conexões dos folds
+\draw[arrow] (fold1.east) -- (preproc.west);
+\draw[arrow] (fold2.east) -- (preproc.west);
 
-% ================================
-% Etapa 4 – Treinamento NeRF
-% ================================
-\node[etapa, right=of et3] (et4) {
-  \textbf{Etapa 4}\\
-  Treinamento do modelo NeRF\\
-  Criação de volumes 3D
-};
+% Corte
+\node[dashedbox, below=1.2cm of preproc] (cut1) {corte 1};
+\draw[arrow] (preproc.south) -- (cut1.north);
 
-% ================================
-% Etapa 5 – Validação dos Resultados
-% ================================
-\node[etapa, right=of et4] (et5) {
-  \textbf{Etapa 5}\\
-  Validação dos resultados
-};
+% Training/Validation
+\node[dashedbox, right=2cm of preproc] (train) {Conjunto\\de Treino};
+\node[dashedbox, below=of train] (val) {Conjunto\\de Validação};
+\node[box, fit=(train)(val), label=above:Conjuntos, inner sep=5pt] (conjuntos) {};
 
-% Detalhes da Etapa 5 (duas sub‐validações)
-\node[subetapa, below=0.5cm of et5] (et5a) {
-  Validação 2D: PSNR, SSIM, LPIPS
-};
-\node[subetapa, below=of et5a] (et5b) {
-  Validação 3D: IoU volumétrico
-};
+\draw[arrow] (preproc.east) -- (train.west);
+\draw[arrow] (preproc.east) -- (val.west);
 
-% ================================
-% Conectando as Etapas com Setas
-% ================================
-\draw[arr] (et1.east) -- (et2.west);
-\draw[arr] (et2.east) -- (et3.west);
-\draw[arr] (et3.east) -- (et4.west);
-\draw[arr] (et4.east) -- (et5.west);
+% GAN
+\node[box, above=of preproc] (gan) {GAN};
+\node[box, above=of train] (synthetics) {Imagens\\sintéticas};
 
-% ================================
-% Linhas ligando sub‐etapas
-% ================================
-\draw[arr, dashed] (et2.south) -- (et2a.north);
-\draw[arr, dashed] (et2a.south) -- (et2b.north);
+\draw[arrow] (gan) -- (synthetics);
+\draw[arrow] (synthetics.south) -- (train.north);
 
-\draw[arr, dashed] (et5.south) -- (et5a.north);
-\draw[arr, dashed] (et5a.south) -- (et5b.north);
+% NeRF
+\node[box, right=of conjuntos] (nerf) {\textit{NeRF}};
+\draw[arrow] (conjuntos.east) -- (nerf.west);
+
+% Métricas
+\node[below=of nerf] (metrics) {Validação};
+\draw[arrow] (nerf.south) -- (metrics.north);
 
 \end{tikzpicture}
+\caption{Pipeline da metodologia}
+\end{figure}
