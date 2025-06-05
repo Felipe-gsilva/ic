@@ -11,17 +11,21 @@ Esta etapa permite o levantamento bibliográfico necessário para manter o proje
 \subsection{Etapa 2 - Pré-processamento \textit{dataset} de imanges histológicas}
 
   Dado um conjunto de imagens fornecido pelo % TODO adicionar referencia ao dataset
-  , observa-se 2 desafios principais: a necessidade de pré-processamento das imagens e a organização do conjunto de dados em segmentos distintos. 
-  
-  Os \textit{NeRF}'s requerem os dados sobre a pose da câmera para cada imagem, ou seja, a posição e orientação da câmera no momento da captura da imagem. Para tal, é necessário que as imagens sejam organizadas em grupos, os quais contenham, individualmente, imagens de um único tecido e pose. Consonantemente, o \textbf{pré-processamento} das imagens se torna essencial para garantir-se o formato adequado para o treinamento do modelo, em específico, será utilizado o \textit{Nerfstudio} para facilitar o \textit{parsing} dos dados de entrada. Isso inclui técnicas como a normalização das imagens, a remoção de ruídos e artefatos e a padronização do tamanho e resolução das imagens, nos casos onde se faça necessário.
+  , observa-se 2 desafios principais: a necessidade de pré-processamento e padronização das imagens e a organização do conjunto de dados em segmentos distintos. Estes, a seguir, serão os segmentos tratados nesta etapa de pré-prcessamento:
 
-  Além disso, para efeito de treinamento do modelo, é necessário que sejam estabelecidos subconjuntos de imagens, cada qual usado em diferentes contextos. Serão criados 3 conjuntos principais: \textbf{Treinamento}, \textbf{Validação} e  \textbf{Teste}, sendo, em específico, o conjunto de treinamento, novamente, subdividido. Pretende-se que, ao fazê-lo, os resultados percam possíveis viéses e, ademais, seja possível determinar os resultados de forma mais precisa.
+\begin{itemize}
+  \item Os \textit{NeRF}'s requerem os dados sobre a pose da câmera para cada imagem, ou seja, a posição e orientação da câmera no momento da captura da imagem. Para tal, é necessário que as imagens sejam organizadas em grupos, os quais contenham, individualmente, imagens de um único tecido e pose, em específico, sendo utilizado o \textit{Nerfstudio} para permitir o \textit{parsing} dos dados de entrada. Consonantemente, o \textbf{pré-processamento} das imagens se torna essencial para garantir-se o formato adequado para o treinamento do modelo. Este processo também inclui técnicas como a normalização das imagens, a remoção de ruídos e artefatos e a padronização do tamanho e resolução das imagens, nos casos onde se faça necessário.
+
+    \item  Além disso, para efeito de treinamento do modelo, é necessário que sejam estabelecidos subconjuntos de imagens, cada qual usado em diferentes contextos. Serão criados 3 conjuntos principais: \textbf{Treinamento}, \textbf{Validação} e  \textbf{Teste}, sendo, em específico, o conjunto de treinamento, novamente, subdividido. Pretende-se que, ao fazê-lo, os resultados percam possíveis viéses e, ademais, seja possível determinar os resultados de forma mais precisa.
+  \end{itemize}
+
+  As imagens, tanto normalizadas, quanto agrupadas em segmentos, serão utilizadas n a etapa 3 e 4. Na etapa 3, todos os segmentos serão utilizados para treinamento do modelo GAN, enquanto na etapa 4, apenas parte da saída desta etapa será utilizada.  
 
 \subsection{Etapa 3 - Treinamento e Geração de imanges}
 
 Nesta etapa, um modelo GAN será treinado para gerar novas imagens histológicas a partir do conjunto de dados pré-processado. O modelo GAN deverá aprender as características dos tecidos histológicos presentes no \textit{dataset}, permitindo, assim, a geração de imagens que preservem as propriedades visuais e estruturais dos tecidos.
 
-Em específico, serão investigados os modelos DCGAN, RAGAN e WGAN-GP, evidenciados no trabalho do Botazzo \cite{rozendo2024histdataaug}. Estas GAN's assimilam o problema da não competição gerada pelo discriminador, que usualmente tem vantagem acerca do gerador, cada um da sua maneira:
+Em especial, serão investigados os modelos DCGAN, RAGAN e WGAN-GP, evidenciados no trabalho do Botazzo \cite{rozendo2024histdataaug}. Estas GAN's assimilam o problema da não competição gerada pelo discriminador, que usualmente tem vantagem acerca do gerador, cada um da sua maneira:
 %For instance, in DCGAN, the first GAN proposal with convolutional layers, the authors used batch normalization and leaky ReLU activations between D’s intermediate layers to make it more stable [ 11 ]. The loss function, however, was the Jensen–Shannon divergence [ 5], which can lead to mode collapse and vanishing gradients [ 8, 11]. The WGAN-GP [12] addresses these problems by using the Wasserstein distance as a loss function, which provides a more meaningful measure of the difference between the probability distributions. WGAN-GP also introduces a gradient penalty term that penalizes the norm of D’s gradients, encouraging more diverse generated samples by enforcing a more uniform distribution of gradients throughout the data space. The RAGAN [13] introduces the relativistic discriminator that estimates the probability that an authentic sample is more realistic than a fake sample and vice versa. It considers the relative realness of real and fake samples, providing more informative feedback to G. RAGAN delivers a more nuanced signal to G, allowing it to understand better how to generate plausible samples on its own and the actual data distribution.
 \begin{itemize}
   \item \textbf{DCGAN}: 
@@ -29,12 +33,15 @@ Em específico, serão investigados os modelos DCGAN, RAGAN e WGAN-GP, evidencia
   \item \textbf{WGAN-GP}:
 \end{itemize}
 
-As imagens geradas por esta etapa serão subsequentemente 
+Desta forma, um dentre os GAN's supracitados (ou outro tipo de arquitetura, caso surja a necessidade durante a execução do projeto) será escolhido para o treinamento e a geração de novas imanges de alta qualidade para serem, posteriormente utilizadas na etapa 4.
 
 
 \subsection{Etapa 4 - Treinamento do modelo NeRF e Criação dos volumes 3D}
 
-O treinamento do modelo NeRF será realizado utilizando as imagens geradas pelo modelo GAN e, paralelamente, com subconjuntos do grupo de treinamento, supracitado. Desta forma, poder-se-á compreender a relação entre as imagens 2D e a reconstrução 3D dos tecidos histológicos. A partir do modelo NeRF treinado, serão obtidos volumes 3D dos tecidos histológicos, permitindo a visualização das estruturas internas dos tecidos com alta fidelidade. Esses volumes serão futuramente avaliados quanto à sua qualidade e fidelidade em relação às imagens originais do \textit{dataset} na etapa de validação. 
+O treinamento do modelo NeRF será realizado utilizando as imagens geradas pelo modelo GAN e, paralelamente, com subconjuntos do grupo de treinamento, supracitado. Desta forma, poder-se-á compreender a relação entre as imagens 2D e a reconstrução 3D dos tecidos histológicos. A partir do modelo NeRF treinado, serão obtidos volumes 3D dos tecidos histológicos, permitindo a visualização das estruturas internas dos tecidos com alta fidelidade.
+
+
+Os volumes produzidos nesta etapa serão futuramente avaliados quanto à sua qualidade e fidelidade em relação às imagens originais do \textit{dataset} na etapa de validação. 
 
 \subsection{Etapa 5 - Validação dos resultados}
 
@@ -49,5 +56,8 @@ Para obter-se resultados precisos, factíveis e replicáveis, este projeto busca
 Essas métricas fornecerão uma base quantitativa robusta para avaliar e comparar a qualidade dos modelos testados, dimensionando uma alta fidelidade ao obter-se valores elevados de PSNR e SSIM e de IoU Volumétrico.
 
 \end{itemize}
+
+
+A metodogolia seguirá o fluxo de trabalho a seguir, uma \textit{pipeline} estruturada para melhor entendimento das etapas, entradas e saidas:
 
 \input{"../diagram/architecture.tex"}

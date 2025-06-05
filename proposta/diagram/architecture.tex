@@ -1,3 +1,4 @@
+\begin{figure}[htbp]
 \begin{tikzpicture}[
   box/.style={rectangle, draw, minimum width=2.5cm, minimum height=1cm, align=center, rounded corners},
   dashedbox/.style={rectangle, draw, dashed, minimum width=2cm, minimum height=1cm, align=center},
@@ -10,8 +11,8 @@
 \node[box, below=of fold1] (fold2) {fold 2};
 
 % Pre-processamento interno
-\node[dashedbox, right=2.2cm of fold1, yshift=0.6cm] (preproc1) {a};
-\node[dashedbox, below=of preproc1] (preproc2) {b};
+\node[dashedbox, right=2cm of fold1, yshift=-0.8cm] (preproc1) {a};
+\node[dashedbox, below=of preproc1, yshift=0.8cm] (preproc2) {b};
 
 % Grupo pré-processamento
 \node[box, fit=(preproc1)(preproc2), label=above:pré-processamento, inner sep=6pt] (preproc) {};
@@ -25,16 +26,16 @@
 \draw[arrow] (preproc.south) -- (cut1.north);
 
 % Training/Validation
-\node[dashedbox, right=2cm of preproc] (train) {Conjunto\\de Treino};
-\node[dashedbox, below=of train] (val) {Conjunto\\de Validação};
-\node[box, fit=(train)(val), label=above:Conjuntos, inner sep=5pt] (conjuntos) {};
+\node[dashedbox, right=2cm of preproc, inner sep=4pt] (train) {Conjunto\\de Treino};
+\node[dashedbox, below=of train, yshift=1cm] (val) {Conjunto\\de Validação};
+\node[box, fit=(train)(val), label=below:Conjuntos, inner sep=5pt] (conjuntos) {};
 
 \draw[arrow] (preproc.east) -- (train.west);
 \draw[arrow] (preproc.east) -- (val.west);
 
 % GAN
-\node[box, above=of preproc] (gan) {GAN};
-\node[box, above=of train] (synthetics) {Imagens\\sintéticas};
+\node[box, above=of preproc, inner sep=1cm] (gan) {GAN};
+\node[box, above=of train, yshift=1.5cm] (synthetics) {Imagens\\sintéticas};
 
 \draw[arrow] (gan) -- (synthetics);
 \draw[arrow] (synthetics.south) -- (train.north);
