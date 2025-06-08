@@ -8,7 +8,6 @@
 
 % Folds
 \node[box] (fold1) {fold 1};
-\node[box, below=of fold1] (fold2) {fold 2};
 
 % Pre-processamento interno
 \node[dashedbox, right=2cm of fold1, yshift=-0.8cm] (preproc1) {a};
@@ -17,25 +16,21 @@
 % Grupo pré-processamento
 \node[box, fit=(preproc1)(preproc2), label=above:pré-processamento, inner sep=6pt] (preproc) {};
 
-% Conexões dos folds
 \draw[arrow] (fold1.east) -- (preproc.west);
-\draw[arrow] (fold2.east) -- (preproc.west);
-
-% Corte
-\node[dashedbox, below=1.2cm of preproc] (cut1) {corte 1};
-\draw[arrow] (preproc.south) -- (cut1.north);
 
 % Training/Validation
-\node[dashedbox, right=2cm of preproc, inner sep=4pt] (train) {Conjunto\\de Treino};
-\node[dashedbox, below=of train, yshift=1cm] (val) {Conjunto\\de Validação};
-\node[box, fit=(train)(val), label=below:Conjuntos, inner sep=5pt] (conjuntos) {};
+\node[dashedbox, right=2cm of preproc, inner sep=4pt] (train) {Treino};
+\node[dashedbox, below=of train, yshift=1cm] (val) {Validação};
+
+\node[dashedbox, below=of val, yshift=1cm] (test) {Teste};
+\node[box, fit=(train)(val)(test), label=below:Conjuntos, inner sep=5pt] (conjuntos) {};
 
 \draw[arrow] (preproc.east) -- (train.west);
 \draw[arrow] (preproc.east) -- (val.west);
 
 % GAN
 \node[box, above=of preproc, inner sep=1cm] (gan) {GAN};
-\node[box, above=of train, yshift=1.5cm] (synthetics) {Imagens\\sintéticas};
+\node[dashedbox, above=of train, yshift=1.5cm] (synthetics) {Imagens\\sintéticas};
 
 \draw[arrow] (gan) -- (synthetics);
 \draw[arrow] (synthetics.south) -- (train.north);

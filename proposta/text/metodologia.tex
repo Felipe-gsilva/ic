@@ -24,12 +24,11 @@ Dado conjunto de dados de imagens histológicas [nome] a ser utilizado, observa-
 
 Nesta etapa, um modelo GAN será treinado para gerar novas imagens histológicas a partir do conjunto de dados pré-processado. O modelo GAN deverá aprender as características dos tecidos histológicos presentes no \textit{dataset}, permitindo, assim, a sintetização de imagens que preservem as propriedades visuais e estruturais dos tecidos.
 
-Em especial, serão investigados os modelos DCGAN, RAGAN e WGAN-GP, evidenciados no trabalho do Botazzo \cite{rozendo2024histdataaug}. Estas GAN's assimilam o problema da não competição gerada pelo discriminador ($D$), que usualmente tem vantagem acerca do gerador ($G$), cada um da sua maneira. No entanto, possiveis novas arquiteturas podem ser utilizadas a depender do resultado da Etapa 1.
-%For instance, in DCGAN, the first GAN proposal with convolutional layers, the authors used batch normalization and leaky ReLU activations between D’s intermediate layers to make it more stable [ 11 ]. The loss function, however, was the Jensen–Shannon divergence [ 5], which can lead to mode collapse and vanishing gradients [ 8, 11]. The WGAN-GP [12] addresses these problems by using the Wasserstein distance as a loss function, which provides a more meaningful measure of the difference between the probability distributions. WGAN-GP also introduces a gradient penalty term that penalizes the norm of D’s gradients, encouraging more diverse generated samples by enforcing a more uniform distribution of gradients throughout the data space. The RAGAN [13] introduces the relativistic discriminator that estimates the probability that an authentic sample is more realistic than a fake sample and vice versa. It considers the relative realness of real and fake samples, providing more informative feedback to G. RAGAN delivers a more nuanced signal to G, allowing it to understand better how to generate plausible samples on its own and the actual data distribution.
+Em especial, serão investigados os modelos DCGAN, RAGAN e WGAN-GP, evidenciados no trabalho do Botazzo \cite{rozendo2024histdataaug}. Estas GAN's assimilam o problema da não competição gerada pelo discriminador ($D$), que usualmente tem vantagem acerca do gerador ($G$), cada um da sua maneira. Para se endereçar o problema das poses de câmera não existentes no conjunto de dados, será investigado o uso das cGAN's (\textit{Conditional Generative Adversary Network}), cujo objetivo é conseguir produzir novos tipos de ângulos e direções de câmera para a imagem referente. Diferentemente de uma GAN tradicional, que gera amostras de forma não controlada, a cGAN introduz um mecanismo de condicionamento. Tanto o gerador (G) quanto o discriminador (D) recebem uma informação adicional, y — neste caso, o vetor de pose da câmera. Assim, o gerador não aprende apenas a criar imagens realistas, mas a criar imagens que correspondam à condição de pose fornecida. O discriminador, por sua vez, aprende a validar se a imagem gerada é autêntica e se corresponde à pose y, forçando o gerador a respeitar o controle de entrada. No entanto, possíveis novas arquiteturas podem ser utilizadas a depender do resultado da Etapa 1.
 
 Para a avaliação das imagens sintetizadas e posterior inserção nos \textit{datasets} de treinamento e validação, será utilizada a métrica conhecida como \textit{Fréchet Inception Distance} (FID) \cite{heusel2018ganstrainedtimescaleupdate}, que mede a distância entre as distribuições de características de imagens reais e sintéticas modelando-as como distribuições Gaussianas.
 
-Desta forma, um dentre os GAN's supracitados será escolhido para o treinamento e a geração de novas imanges de alta qualidade para serem, posteriormente utilizadas na etapa 4, ao serem inseridas no conjunto de treinamento e validação.
+Desta forma, um dentre os GAN's supracitados será escolhido de acordo com o melhor desempenho para o treinamento e a geração de novas imanges de alta qualidade para serem, posteriormente utilizadas na etapa 4, ao serem inseridas no conjunto de treinamento e validação.
 
 
 \subsection{Etapa 4 - Treinamento do modelo NeRF e Criação dos volumes 3D}
@@ -41,21 +40,17 @@ O objetivo central desta etapa é avaliar o impacto do aumento de dados com GANs
 \item \textbf{Aumento de Dados:} Um segundo modelo NeRF será treinado com o conjunto de treinamento original aumentado com as imagens sintéticas de alta qualidade geradas na Etapa 3. A proporção de dados sintéticos será um hiperparâmetro a ser explorado.
 \end{itemize}
 
+Para permitir a implementação do Nerf, será utilizado como base o código oficial, que se utiliza especialmente da biblioteca \textit{python} conhecida como \textit{tensorflow} e otimizações de GPU para viabilizar o intenso processamento. Ao se utilizar deste codigo, hiperparametros poderão ser retirados e otimizados, buscando o melhor resultado para os modelos 3D.
+
 Desta forma, poder-se-á compreender a relação entre as imagens 2D e a reconstrução 3D dos tecidos histológicos. A partir do modelo NeRF treinado, serão obtidos volumes 3D dos tecidos histológicos, permitindo a visualização das estruturas internas dos tecidos com alta fidelidade. Estes volumes produzidos serão futuramente avaliados quanto à sua qualidade e fidelidade em relação às imagens originais do \textit{dataset} na etapa 5. 
 
 \subsection{Etapa 5 - Validação dos resultados}
 
-Para obter-se resultados precisos, factíveis e replicáveis, este projeto buscará utilizar-se de métricas de validação dos modelos 3D reconstruídos, seja pela comparação com modelos de referência ou pela análise de poses específicas, ou seja, imagens 2D tiradas sobre o modelo.
+Para obter-se resultados precisos, factíveis e replicáveis, este projeto buscará utilizar-se de métricas de validação dos modelos 3D reconstruídos pela análise de poses específicas, ou seja, imagens 2D tiradas sobre o modelo.
 
-\begin{itemize}
+Serão empregados tanto o PSNR (\textit{Peak Signal-To-Noise Ratio}) quanto o SSIM (\textit{Structural Similarity Index}). O PSNR faz uma comparação direta entre 2 imagens e consegue descrever o ruído discrepante entre estas, utilizando-se de uma razão sinal-ruído em escala logarítmica. Já o SSIM trabalha com a estrutura da imagem em si, ou seja, nos agrupamentos dos pixels da referência quando comparados à imagem gerada pela arquitetura GAN, capturando melhor a percepção humana de qualidade visual do que o PSNR. Devido à inacessibilidade a um modelo\textit{ground-truth} para o domínio das reconstruções 3D, utilizar-se-á a métrica LPIPS (\textit{Learned Perceptual Image Patch Similarity}), que compara as imagens no espaço de características de uma rede neural profunda, fornecendo uma medida de distância que se alinha de forma mais robusta com a percepção visual humana de similaridade.  
 
-  \item \textbf{Validação de imangens 2D}: Serão empregados, no campo das imagens bidimensionais, tanto o PSNR (\textit{Peak Signal-To-Noise Ratio}) quanto o SSIM (\textit{Structural Similarity Index}). O PSNR faz uma comparação direta entre 2 imagens e consegue descrever o ruído discrepante entre estas, utilizando-se de uma razão sinal-ruído em escala logarítmica. Já o SSIM trabalha com a estrutura da imagem em si, ou seja, nos agrupamentos dos pixels da referência quando comparados à imagem gerada pela arquitetura GAN, capturando melhor a percepção humana de qualidade visual do que o PSNR.
-
-  \item \textbf{Validação de modelos 3D}: Para o domínio das reconstruções 3D, utilizar-se-á o Volumetric Intersection over Union (IoU Volumétrico). Esta métrica calcula a razão entre o volume da interseção e o volume da união do modelo reconstruído e do modelo de referência, fornecendo uma medida direta da sobreposição espacial dos volumes.
-
-Essas métricas fornecerão uma base quantitativa robusta para avaliar e comparar a qualidade dos modelos testados, dimensionando uma alta fidelidade ao obter-se valores elevados de PSNR e SSIM e de IoU Volumétrico.
-
-\end{itemize}
+Essas métricas fornecerão uma base quantitativa robusta para avaliar e comparar a qualidade dos modelos testados, dimensionando uma alta fidelidade ao obter-se valores elevados de PSNR e SSIM e de LPIPS.
 
 
 A metodogolia seguirá o fluxo de trabalho a seguir, uma \textit{pipeline} estruturada para melhor entendimento das etapas, entradas e saidas:
