@@ -10,15 +10,15 @@ Esta etapa permite o levantamento bibliográfico necessário para manter o proje
 
 \subsection{Etapa 2 - Pré-processamento \textit{dataset} de imanges histológicas}
 
-  Dado um conjunto de imagens histológico, observa-se 2 desafios principais: a necessidade de pré-processamento e padronização das imagens e a organização do conjunto de dados em segmentos distintos. Estes, a seguir, serão os segmentos tratados nesta etapa:
+Dado conjunto de dados de imagens histológicas [nome] a ser utilizado, observa-se 2 desafios principais: a necessidade de pré-processamento e padronização das imagens e a organização do conjunto de dados em segmentos distintos. Estes, a seguir, serão os segmentos tratados nesta etapa:
 
 \begin{itemize}
-  \item Os NeRF's requerem os dados sobre a pose da câmera para cada imagem, ou seja, a posição e orientação da câmera no momento da captura da imagem. Para tal, é necessário que as imagens sejam organizadas em grupos, os quais contenham, individualmente, imagens de um único tecido e pose, em específico, sendo utilizado o \textit{Nerfstudio} para permitir o \textit{parsing} dos dados de entrada. Consonantemente, o \textbf{pré-processamento} das imagens se torna essencial para garantir-se o formato adequado para o treinamento do modelo. Este processo também inclui técnicas como a normalização das imagens, a remoção de ruídos e artefatos e a padronização do tamanho e resolução das imagens, nos casos onde se faça necessário.
-
-    \item  Além disso, para efeito de treinamento do modelo, é necessário que sejam estabelecidos subconjuntos de imagens, cada qual usado em diferentes contextos. Serão criados 3 conjuntos principais: \textbf{Treinamento}, \textbf{Validação} e  \textbf{Teste}, sendo, em específico, o conjunto de treinamento, novamente, subdividido. Pretende-se que, ao fazê-lo, os resultados percam possíveis viéses e, ademais, seja possível determinar os resultados de forma mais precisa.
+  \item Os NeRF's requerem os dados sobre a pose da câmera para cada imagem, ou seja, a posição e orientação da câmera no momento da captura da imagem. Para tal, é necessário que as imagens sejam organizadas em grupos, os quais contenham, individualmente, imagens de um único tecido e pose, em específico, sendo utilizado o \textit{Nerfstudio} para permitir o \textit{parsing} dos dados de entrada. 
+  \item O pré-processamento subsequente incluirá a normalização de cores e resolução, assim como a possível remoção de artefatos. 
+  \item  Além disso, para efeito de treinamento do modelo, é necessário que sejam estabelecidos subconjuntos de imagens, cada qual usado em diferentes contextos. Serão criados 3 conjuntos principais: \textbf{Treinamento}, \textbf{Validação} e \textbf{Teste}.
   \end{itemize}
 
-  As imagens, tanto normalizadas, quanto agrupadas em segmentos, serão utilizadas na etapa 3 (todos os segmentos serão utilizados para treinamento do modelo GAN) e na etapa 4 (apenas parte da saída desta etapa será utilizada).  
+  Os conjuntos provenientes desta etapa serão utilizados na etapa 3 e na etapa 4. 
 
 \subsection{Etapa 3 - Treinamento e Geração de imanges}
 
@@ -34,13 +34,12 @@ Desta forma, um dentre os GAN's supracitados será escolhido para o treinamento 
 
 \subsection{Etapa 4 - Treinamento do modelo NeRF e Criação dos volumes 3D}
 
-O treinamento do modelo NeRF será realizado utilizando as imagens geradas pelo modelo GAN e, paralelamente, com subconjuntos do grupo de treinamento, supracitado. Os treinamentos serão estruturados da seguinte maneira:
-\begin{itemize}
-  \item utilizando apenas o conjunto de dados adaptado pelo pré-processamento
-  \item utilizando apenas o conjunto de dados aumentado por GAN's
-\end{itemize}
+O objetivo central desta etapa é avaliar o impacto do aumento de dados com GANs na qualidade da reconstrução 3D do NeRF. Para isso, serão conduzidos experimentos controlados:
 
-O treinamento propriamente dito será feito a partir
+\begin{itemize}
+  \item \textbf{\textit{Baseline:}} Um modelo NeRF será treinado utilizando apenas o conjunto de treinamento original (real).
+\item \textbf{Aumento de Dados:} Um segundo modelo NeRF será treinado com o conjunto de treinamento original aumentado com as imagens sintéticas de alta qualidade geradas na Etapa 3. A proporção de dados sintéticos será um hiperparâmetro a ser explorado.
+\end{itemize}
 
 Desta forma, poder-se-á compreender a relação entre as imagens 2D e a reconstrução 3D dos tecidos histológicos. A partir do modelo NeRF treinado, serão obtidos volumes 3D dos tecidos histológicos, permitindo a visualização das estruturas internas dos tecidos com alta fidelidade. Estes volumes produzidos serão futuramente avaliados quanto à sua qualidade e fidelidade em relação às imagens originais do \textit{dataset} na etapa 5. 
 
