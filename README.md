@@ -15,7 +15,7 @@ Apesar de sua fidelidade, no entanto, os trabalhos supracitados demandam um alto
 
 Neste projeto, tem-se como objetivo investigar e aplicar métodos de geração de imagem para aumentar um dataset limitado na histologia. Para tal, pretende-se:
 
-- Adaptar entradas de imagens para se adequarem ao uso oficial de \textit{NeRF’s
+- Adaptar entradas de imagens para se adequarem ao uso oficial de NeRF’s
 - Explorar o uso do modelo GAN's como técnica comparativa de aumento de dados, a fim de avaliar sua eficácia relativa em relação ao uso em NeRF’s
 - Investigar a viabilidade de se aumentar um dataset histológico para o uso em nerf
 - Definir as principais associações e limites observados no contexto aqui explorado
