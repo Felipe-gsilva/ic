@@ -11,13 +11,12 @@ Porém, para conseguir modelos tri-dimensionais de alta confiabilidade, o NeRF d
 Considerando-se a necessidade de grandes volumes de dados mencionada, vários autores buscaram aprimorar seus datasets com inúmeras técnicas, sempre na intenção de qualificar mais e mais os dados e obter imagens mais próximas do ground-truth. Por exemplo, pesquisadores utilizaram-se do SFM (Structure from Motion), uma técnica de imagem de alcance fotogramétrico, para se capturar imagens do ambiente em questão com maior precisão e qualidade, como no método de gaussianos 3D [2], ou mesmo o MVS (multi-view stereo), escolhido pelo uso subsequente de CNN’s (convulutional neural network) [3]. Estas técnicas, conquanto fiéis às suas referências, são, ora, computacionalmente caras, ora, ainda, demandantes de uma quantidade exacerbada de imagens do item a ser renderizado. Datasets histológicos, entretanto, costumam não possuir tamanha diversidade ou redundância de ângulos necessária, devido a desafios como a complexidade estrutural dos tecidos e restrições éticas na coleta de amostras [4].
 
 Apesar de sua fidelidade, no entanto, os trabalhos supracitados demandam um alto poder computacional, não tendo sua replicabilidade altamente assegurada. Consonantemente, neste trabalho, buscar-se-á possibilidades de se minimizar a distância entre um dataset ideal (repleto de redundância e ângulos de câmera distintos) e os datasets comuns na histologia. Para tal, seguindo trabalhos similares, se faz necessária uma investigação sobre a viabilidade de se utilizar técnicas de geração de imagem como GAN’s (generative adversarie network) aplicadas em dados histológicos, como feito previamente por Rozendo [5] em imagens bi-dimensionais. GAN’s permitem a criação de imagens através de duas redes neurais treinadas para competição mutua (G - gerador e D - discriminador). G tenta criar imagens que emulam o pertencimento ao domínio de D, enquanto este o avalia, classificando-o como pertencente ou não. Eventualmente, G e D atingem um estado de equilíbrio (chamado de equilíbrio de Nesh), no qual, mesmo após maiores treinamentos, a diferença se estabiliza [6]. Ao utilizar-se deste conceito, espera-se, portanto, promover a redução da dependência de datasets extensos de NeRF’s, enquanto mantem-se sua qualidade instrínseca.
-
 ## 2 Objetivos
 
 Neste projeto, tem-se como objetivo investigar e aplicar métodos de geração de imagem para aumentar um dataset limitado na histologia. Para tal, pretende-se:
 
-- Adaptar entradas de imagens para se adequarem ao uso oficial de NERF’s
-- Explorar o uso do modelo GAN em imagens histológicas
+- Adaptar entradas de imagens para se adequarem ao uso oficial de \textit{NeRF’s
+- Explorar o uso do modelo GAN's como técnica comparativa de aumento de dados, a fim de avaliar sua eficácia relativa em relação ao uso em NeRF’s
 - Investigar a viabilidade de se aumentar um dataset histológico para o uso em nerf
 - Definir as principais associações e limites observados no contexto aqui explorado
 
