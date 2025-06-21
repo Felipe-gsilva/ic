@@ -1,0 +1,3 @@
+[submodule "codigo/USGAN"]
+	path = codigo/gan
+	url = https://github.com/gabrielmbrum/USGAN/
